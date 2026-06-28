@@ -26,9 +26,22 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: "Te Lo Resuelvo Viajes | Vuelos Lima-Milán, Madrid, Bogotá",
+  metadataBase: new URL("https://teloresuelvo.it"),
+  title: "Te Lo Resuelvo Viajes | Vuelos baratos entre Sudamérica y Europa",
   description:
-    "Agencia especializada en billetería aérea internacional. Vuelos entre Sudamérica y Europa con asesoría personalizada.",
+    "Vuelos al mejor precio entre Lima, Bogotá, Guayaquil, Buenos Aires y Europa. Equipaje incluido, asesoría personalizada y respuesta por WhatsApp en menos de 5 minutos. +500 pasajeros ya volaron con nosotros.",
+  keywords: [
+    "vuelos baratos",
+    "vuelos Sudamérica Europa",
+    "vuelos Lima Milán",
+    "vuelos Bogotá Madrid",
+    "vuelos Guayaquil",
+    "agencia de viajes",
+    "billetería aérea",
+    "Te Lo Resuelvo",
+    "vuelos con equipaje incluido",
+    "vuelos latinos en Europa",
+  ],
   icons: {
     icon: [
       {
@@ -41,18 +54,18 @@ export const metadata: Metadata = {
     shortcut: "/favicon-512x512px.webp",
   },
   openGraph: {
-    title: "Te Lo Resuelvo Viajes | Vuelos Lima-Milán, Madrid, Bogotá",
+    title: "Te Lo Resuelvo Viajes | Vuelos baratos entre Sudamérica y Europa",
     description:
-      "Agencia especializada en billetería aérea internacional. Vuelos entre Sudamérica y Europa con asesoría personalizada.",
+      "Encontramos el vuelo perfecto para ti — al mejor precio, con equipaje incluido y sin sorpresas. Comparamos +20 aerolíneas y te respondemos por WhatsApp en minutos.",
     type: "website",
     locale: "es_ES",
     siteName: "Te Lo Resuelvo Viajes",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Te Lo Resuelvo Viajes | Vuelos Lima-Milán, Madrid, Bogotá",
+    title: "Te Lo Resuelvo Viajes | Vuelos baratos entre Sudamérica y Europa",
     description:
-      "Agencia especializada en billetería aérea internacional. Vuelos entre Sudamérica y Europa con asesoría personalizada.",
+      "Encontramos el vuelo perfecto para ti — al mejor precio, con equipaje incluido y sin sorpresas. Comparamos +20 aerolíneas y te respondemos por WhatsApp en minutos.",
   },
 };
 
