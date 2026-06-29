@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function CookiesPage() {
+export default function CookiePolicyPage() {
   return (
     <LegalPageLayout
       title="Política de Cookies"
       lastUpdated={siteLegal.lastUpdated}
-      intro="Esta política describe qué cookies utiliza este sitio web, con qué finalidad y cómo puede gestionarlas."
+      intro={`Esta política describe qué cookies y tecnologías similares utiliza el sitio web ${siteLegal.website}, operado por ${siteLegal.companyName}, con qué finalidad, durante cuánto tiempo y cómo puede gestionarlas usted en cualquier momento.`}
       sections={cookieSections}
     />
   );

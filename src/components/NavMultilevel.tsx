@@ -15,9 +15,16 @@ interface NavMultilevelProps {
   transparent?: boolean;
 }
 
+const WHATSAPP_CTA_HREF =
+  "https://wa.me/393514915445?text=Hola%20Te%20Lo%20Resuelvo%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20cotizar%20un%20vuelo.%20%C2%BFMe%20podr%C3%ADan%20dar%20precios%20y%20disponibilidad%3F";
+
+const WHATSAPP_GROUP_HREF =
+  "https://chat.whatsapp.com/EEEQfbKdsMNI8RbIQxaRwO";
+
 export default function NavMultilevel({ transparent = false }: NavMultilevelProps) {
   const navRef = useRef<HTMLElement>(null);
   const initRef = useRef<{ lastMode: string | null }>({ lastMode: null });
+  const docClickRef = useRef<((e: MouseEvent) => void) | null>(null);
 
   useEffect(() => {
     const nav = navRef.current;
@@ -185,6 +192,10 @@ export default function NavMultilevel({ transparent = false }: NavMultilevelProp
         }
       };
 
+      if (docClickRef.current) {
+        document.removeEventListener("click", docClickRef.current);
+      }
+      docClickRef.current = docClickHandler;
       document.addEventListener("click", docClickHandler);
     }
 
@@ -236,6 +247,10 @@ export default function NavMultilevel({ transparent = false }: NavMultilevelProp
     return () => {
       window.removeEventListener("resize", debouncedInit);
       window.removeEventListener("scroll", onScroll);
+      if (docClickRef.current) {
+        document.removeEventListener("click", docClickRef.current);
+        docClickRef.current = null;
+      }
       btnHovers.forEach((btn) => {
         btn.removeEventListener("mouseenter", handleBtnHover as EventListener);
         btn.removeEventListener("mouseleave", handleBtnHover as EventListener);
@@ -307,7 +322,7 @@ export default function NavMultilevel({ transparent = false }: NavMultilevelProp
                             { label: "Buenos Aires", img: "/slide-salvador-mask.jpg" },
                           ].map((item) => (
                             <li key={item.label} className="nav-dropdown__content-li">
-                              <a href="https://wa.me/393514915445?text=Hola%20Te%20Lo%20Resuelvo%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20cotizar%20un%20vuelo.%20%C2%BFMe%20podr%C3%ADan%20dar%20precios%20y%20disponibilidad%3F" target="_blank" rel="noopener noreferrer" className="nav-dropdown__link">
+                              <a href={WHATSAPP_CTA_HREF} target="_blank" rel="noopener noreferrer" className="nav-dropdown__link">
                                 <div className="nav-dropdown__link-bg">
                                   <img src={item.img} alt="" className="nav-dropdown__img" />
                                   <div className="nav-dropdown__img-overlay" />
@@ -358,12 +373,12 @@ export default function NavMultilevel({ transparent = false }: NavMultilevelProp
                       <div className="nav-container">
                         <ul className="nav-dropdown__content">
                           {[
-                            { label: "Vuelos", img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?fm=jpg&q=60&w=800&auto=format&fit=crop" },
-                            { label: "Asesoría Migratoria", img: "https://images.unsplash.com/photo-1454496406107-dc34337da8d6?fm=jpg&q=60&w=800&auto=format&fit=crop" },
-                            { label: "Grupo VIP", img: "https://images.unsplash.com/photo-1540339832862-474599807836?fm=jpg&q=60&w=800&auto=format&fit=crop" },
+                            { label: "Vuelos", img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?fm=jpg&q=60&w=800&auto=format&fit=crop", href: WHATSAPP_CTA_HREF },
+                            { label: "Asesoría Migratoria", img: "https://images.unsplash.com/photo-1454496406107-dc34337da8d6?fm=jpg&q=60&w=800&auto=format&fit=crop", href: WHATSAPP_CTA_HREF },
+                            { label: "Grupo VIP", img: "https://images.unsplash.com/photo-1540339832862-474599807836?fm=jpg&q=60&w=800&auto=format&fit=crop", href: WHATSAPP_GROUP_HREF },
                           ].map((item) => (
                             <li key={item.label} className="nav-dropdown__content-li">
-                              <a href="https://wa.me/393514915445?text=Hola%20Te%20Lo%20Resuelvo%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20cotizar%20un%20vuelo.%20%C2%BFMe%20podr%C3%ADan%20dar%20precios%20y%20disponibilidad%3F" target="_blank" rel="noopener noreferrer" className="nav-dropdown__link">
+                              <a href={item.href} target="_blank" rel="noopener noreferrer" className="nav-dropdown__link">
                                 <div className="nav-dropdown__link-bg">
                                   <img src={item.img} alt="" className="nav-dropdown__img" />
                                   <div className="nav-dropdown__img-overlay" />

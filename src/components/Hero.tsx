@@ -263,6 +263,8 @@ export default function Hero() {
     if (document.fonts) document.fonts.ready.then(onResize);
 
     render(0);
+    const textList = root.querySelector(".layered-slider__text-list") as HTMLElement;
+    if (textList) textList.style.visibility = "visible";
     startAutoplay();
 
     return () => {

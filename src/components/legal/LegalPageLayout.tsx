@@ -33,10 +33,10 @@ export default function LegalPageLayout({
             </p>
             {intro && <p className="legal-page__intro">{intro}</p>}
             <nav className="legal-page__nav" aria-label="Enlaces legales">
-              <Link href="/privacidad" className="legal-page__nav-link">
+              <Link href="/privacy-policy" className="legal-page__nav-link">
                 Privacidad
               </Link>
-              <Link href="/cookies" className="legal-page__nav-link">
+              <Link href="/cookie-policy" className="legal-page__nav-link">
                 Cookies
               </Link>
             </nav>

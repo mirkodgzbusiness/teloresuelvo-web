@@ -5,6 +5,7 @@ import "./globals.css";
 import CookieConsent from "@/components/cookies/CookieConsent";
 import Analytics from "@/components/cookies/Analytics";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const nationalCondensed = localFont({
   src: [
@@ -80,6 +81,7 @@ export default function RootLayout({
       className={`${nationalCondensed.variable} ${figtree.variable} antialiased`}
     >
       <body className="min-h-screen bg-page text-text font-medium">
+        {process.env.NODE_ENV === "production" && <LoadingScreen />}
         <CookieConsent>
           {children}
           <WhatsAppFloat />

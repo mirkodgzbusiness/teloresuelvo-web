@@ -1,31 +1,68 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useId } from "react";
 import { motion } from "motion/react";
 
-/* Proportions tuned so "TeLoResuelvo" fits without stretching glyphs */
-const VIEW_W = 800;
-const VIEW_H = 220;
-const TEXT_X = VIEW_W / 2;
-const TEXT_Y = 110;
-const FONT_SIZE = 98;
+const fillHover = "#1e699c33";
 
-const sharedTextProps = {
-  x: TEXT_X,
-  y: TEXT_Y,
-  textAnchor: "middle" as const,
-  dominantBaseline: "middle" as const,
-  fontSize: FONT_SIZE,
-  fontWeight: 700,
-  fontFamily: "Helvetica, Arial, sans-serif",
-  strokeWidth: 0.5,
-};
+const LAYOUTS = {
+  desktop: {
+    text: "TeLoResuelvo",
+    viewW: 800,
+    viewH: 220,
+    textY: 110,
+    fontSize: 98,
+    strokeWidth: 0.5,
+    maskRadius: "22%",
+    strokeDefault: "rgba(255, 255, 255, 0.15)",
+  },
+  mobile: {
+    text: "TLR",
+    viewW: 360,
+    viewH: 200,
+    textY: 108,
+    fontSize: 158,
+    strokeWidth: 0.85,
+    maskRadius: "42%",
+    strokeDefault: "rgba(255, 255, 255, 0.28)",
+  },
+} as const;
 
-export default function HoverText({ text }: { text: string }) {
+function useIsMobile(breakpoint = 640) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
+export default function HoverText() {
+  const isMobile = useIsMobile();
+  const layout = isMobile ? LAYOUTS.mobile : LAYOUTS.desktop;
+  const uid = useId().replace(/:/g, "");
+
   const svgRef = useRef<SVGSVGElement>(null);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [maskPosition, setMaskPosition] = useState({ cx: "50%", cy: "50%" });
+
+  const textX = layout.viewW / 2;
+  const sharedTextProps = {
+    x: textX,
+    y: layout.textY,
+    textAnchor: "middle" as const,
+    dominantBaseline: "middle" as const,
+    fontSize: layout.fontSize,
+    fontWeight: 700,
+    fontFamily: "Helvetica, Arial, sans-serif",
+    strokeWidth: layout.strokeWidth,
+  };
 
   useEffect(() => {
     if (svgRef.current && cursor.x !== null && cursor.y !== null) {
@@ -43,30 +80,32 @@ export default function HoverText({ text }: { text: string }) {
     <svg
       ref={svgRef}
       width="100%"
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+      viewBox={`0 0 ${layout.viewW} ${layout.viewH}`}
       preserveAspectRatio="xMidYMid meet"
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
-      className="footer-hover-text__svg select-none"
+      onTouchStart={() => setHovered(true)}
+      onTouchEnd={() => setHovered(false)}
+      onTouchMove={(e) => {
+        const touch = e.touches[0];
+        if (touch) setCursor({ x: touch.clientX, y: touch.clientY });
+      }}
+      className={`footer-hover-text__svg select-none${isMobile ? " footer-hover-text__svg--mobile" : ""}`}
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="textGradient" gradientUnits="userSpaceOnUse">
-          {hovered && (
-            <>
-              <stop offset="0%" stopColor="#008dcc" />
-              <stop offset="50%" stopColor="#3186ff" />
-              <stop offset="100%" stopColor="#38bdf8" />
-            </>
-          )}
+        <linearGradient id={`textGradient-${uid}`} gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#7dd3fc" />
+          <stop offset="45%" stopColor="#38bdf8" />
+          <stop offset="100%" stopColor="#5ec8f0" />
         </linearGradient>
 
         <motion.radialGradient
-          id="revealMask"
+          id={`revealMask-${uid}`}
           gradientUnits="userSpaceOnUse"
-          r="20%"
+          r={hovered ? layout.maskRadius : "0%"}
           initial={{ cx: "50%", cy: "50%" }}
           animate={maskPosition}
           transition={{ duration: 0, ease: "easeOut" }}
@@ -74,39 +113,26 @@ export default function HoverText({ text }: { text: string }) {
           <stop offset="0%" stopColor="white" />
           <stop offset="100%" stopColor="black" />
         </motion.radialGradient>
-        <mask id="textMask">
-          <rect x="0" y="0" width="100%" height="100%" fill="url(#revealMask)" />
+        <mask id={`textMask-${uid}`}>
+          <rect x="0" y="0" width="100%" height="100%" fill={`url(#revealMask-${uid})`} />
         </mask>
       </defs>
-      <text
-        {...sharedTextProps}
-        style={{
-          opacity: hovered ? 0.7 : 0,
-          fill: "transparent",
-          stroke: "rgba(255, 255, 255, 0.15)",
-        }}
-      >
-        {text}
-      </text>
       <motion.text
         {...sharedTextProps}
-        style={{
-          fill: "transparent",
-          stroke: "rgba(255, 255, 255, 0.15)",
-        }}
+        style={{ fill: "transparent", stroke: layout.strokeDefault }}
         initial={{ strokeDashoffset: 1000, strokeDasharray: 1000 }}
         animate={{ strokeDashoffset: 0, strokeDasharray: 1000 }}
         transition={{ duration: 4, ease: "easeInOut" }}
       >
-        {text}
+        {layout.text}
       </motion.text>
       <text
         {...sharedTextProps}
-        stroke="url(#textGradient)"
-        style={{ fill: "transparent" }}
-        mask="url(#textMask)"
+        stroke={`url(#textGradient-${uid})`}
+        style={{ fill: fillHover }}
+        mask={`url(#textMask-${uid})`}
       >
-        {text}
+        {layout.text}
       </text>
     </svg>
   );

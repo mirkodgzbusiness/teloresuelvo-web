@@ -56,8 +56,12 @@ export default function CookieConsent({ children }: { children?: ReactNode }) {
   useEffect(() => {
     const stored = readConsent(cookieConsentConfig.expiryDays);
     setConsent(stored);
-    setShowBanner(stored === null);
     setReady(true);
+
+    if (stored === null) {
+      const delay = setTimeout(() => setShowBanner(true), 3000);
+      return () => clearTimeout(delay);
+    }
   }, []);
 
   const persist = useCallback((next: CookieConsent) => {
@@ -110,7 +114,6 @@ export default function CookieConsent({ children }: { children?: ReactNode }) {
       {children}
       {showBanner && <CookieBanner />}
       {showPreferences && <CookiePreferences />}
-      {consent && !showBanner && !showPreferences && <CookieReopenButton />}
     </ConsentContext.Provider>
   );
 }

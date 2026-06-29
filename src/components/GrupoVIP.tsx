@@ -6,12 +6,34 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const WHATSAPP_GROUP_HREF =
+  "https://chat.whatsapp.com/EEEQfbKdsMNI8RbIQxaRwO";
+
 const benefits = [
-  { icon: "🏷️", text: "Tarifas de error y ofertas flash antes que nadie" },
-  { icon: "📅", text: "Alertas de temporada baja para tus rutas" },
-  { icon: "💡", text: "Tips de equipaje, migración y escalas" },
-  { icon: "🚫", text: "Cero spam — solo ofertas reales" },
+  "Tarifas de error y ofertas flash antes que nadie",
+  "Alertas de temporada baja para tus rutas",
+  "Tips de equipaje, migración y escalas",
+  "Cero spam — solo ofertas reales",
 ];
+
+function CheckIcon() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0"
+    >
+      <path
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        stroke="#38bdf8"
+      />
+      <path d="M8 12L11 15L16 10" stroke="#38bdf8" strokeMiterlimit="10" />
+    </svg>
+  );
+}
 
 export default function GrupoVIP() {
   const ref = useRef<HTMLElement>(null);
@@ -48,21 +70,21 @@ export default function GrupoVIP() {
           antes que en cualquier web.
         </p>
 
-        <div className="animate-in grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 max-w-md mx-auto text-left">
-          {benefits.map((b) => (
+        <div className="animate-in flex flex-col gap-4 mb-10 max-w-md mx-auto text-left">
+          {benefits.map((text) => (
             <div
-              key={b.text}
-              className="flex items-start gap-2 text-base text-on-dark"
+              key={text}
+              className="flex items-center gap-3 text-base text-on-dark"
             >
-              <span className="text-base mt-0.5">{b.icon}</span>
-              <span>{b.text}</span>
+              <CheckIcon />
+              <span>{text}</span>
             </div>
           ))}
         </div>
 
         <div className="animate-in">
           <a
-            href="https://chat.whatsapp.com/ENLACE_GRUPO_VIP"
+            href={WHATSAPP_GROUP_HREF}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-white text-navy text-base font-bold px-8 py-4 rounded-full transition-all duration-200 hover:bg-gray-100 hover:scale-[1.02] active:scale-[0.98] shadow-lg"

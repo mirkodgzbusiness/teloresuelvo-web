@@ -8,8 +8,8 @@ export const cookieConsentConfig = {
   logoSrc: "/LogoTeLoResuelvoPNG (1).webp",
   logoAlt: "Te Lo Resuelvo Viajes",
 
-  privacyPolicyUrl: "/privacidad",
-  cookiePolicyUrl: "/cookies",
+  privacyPolicyUrl: "/privacy-policy",
+  cookiePolicyUrl: "/cookie-policy",
 
   /** Set when you add GA4 — e.g. "G-XXXXXXXXXX" */
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",

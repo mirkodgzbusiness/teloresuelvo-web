@@ -33,8 +33,8 @@ npm start
 |------|-------------|
 | `/` | Landing principal |
 | `/contacto` | Página de contacto |
-| `/privacidad` | Política de privacidad |
-| `/cookies` | Política de cookies |
+| `/privacy-policy` | Política de privacidad |
+| `/cookie-policy` | Política de cookies |
 
 El sitemap y robots se generan en `src/app/sitemap.ts` y `src/app/robots.ts`.
 

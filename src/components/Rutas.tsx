@@ -3,15 +3,19 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Button043 from "@/components/Button043";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const WHATSAPP_CTA_HREF =
+  "https://wa.me/393514915445?text=Hola%20Te%20Lo%20Resuelvo%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20cotizar%20un%20vuelo.%20%C2%BFMe%20podr%C3%ADan%20dar%20precios%20y%20disponibilidad%3F";
 
 interface RutaCardProps {
   flag1: string;
   flag2: string;
   title: string;
   description: string;
-  price: string;
+  priceLabel: string;
 }
 
 function RutaCard({
@@ -19,10 +23,13 @@ function RutaCard({
   flag2,
   title,
   description,
-  price,
+  priceLabel,
 }: RutaCardProps) {
   return (
-    <div className="group rounded-2xl border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.08)] bg-white p-7 transition-all duration-300 hover:shadow-xl hover:shadow-navy/5 hover:scale-[1.02] hover:border-gray-300 flex flex-col">
+    <div
+      data-hover=""
+      className="group rounded-2xl border border-gray-200 shadow-[0_4px_24px_rgba(0,0,0,0.08)] bg-white p-7 transition-all duration-300 hover:shadow-xl hover:shadow-navy/5 hover:scale-[1.02] hover:border-gray-300 flex flex-col"
+    >
       <div className="flex items-center gap-2 text-3xl mb-3">
         <span>{flag1}</span>
         <svg className="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,13 +43,14 @@ function RutaCard({
         {description}
       </p>
 
-      <p className="font-display text-2xl font-extrabold text-navy mb-4">
-        {price}
-        <span className="text-base font-normal text-text-muted ml-1">
-          ida y vuelta*
-        </span>
-      </p>
-
+      <Button043
+        href={WHATSAPP_CTA_HREF}
+        label={priceLabel}
+        long
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-auto"
+      />
     </div>
   );
 }
@@ -54,7 +62,7 @@ const rutas: RutaCardProps[] = [
     title: "Milán / Roma ↔ Lima",
     description:
       "La favorita de la comunidad peruana en Italia. Vuelos con maleta en bodega, escalas cortas y flexibilidad para cambios de fecha.",
-    price: "Desde €380",
+    priceLabel: "Desde €380 ida y vuelta*",
   },
   {
     flag1: "🇪🇸",
@@ -62,7 +70,7 @@ const rutas: RutaCardProps[] = [
     title: "Madrid / Barcelona ↔ Bogotá / Medellín / Cali",
     description:
       "Conexiones directas y con escala desde las principales ciudades españolas. Perfecta para vacaciones o visitas familiares.",
-    price: "Desde €420",
+    priceLabel: "Desde €420 ida y vuelta*",
   },
   {
     flag1: "🇪🇸",
@@ -70,7 +78,7 @@ const rutas: RutaCardProps[] = [
     title: "Madrid / Barcelona ↔ Lima",
     description:
       "Cada vez más solicitada por peruanos en España. Vuelos con buen equipaje y horarios que aprovechan tus vacaciones al máximo.",
-    price: "Desde €450",
+    priceLabel: "Desde €450 ida y vuelta*",
   },
   {
     flag1: "🇮🇹",
@@ -78,7 +86,7 @@ const rutas: RutaCardProps[] = [
     title: "Roma / Milán ↔ Bogotá",
     description:
       "La ruta que conecta a la comunidad colombiana en Italia con su país. Vuelos competitivos con opciones de equipaje generoso.",
-    price: "Desde €440",
+    priceLabel: "Desde €440 ida y vuelta*",
   },
 ];
 

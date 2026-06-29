@@ -44,6 +44,44 @@ function formatNumber(value: number, decimals: number): string {
   return Math.round(value).toLocaleString("es-ES");
 }
 
+function StatCounter({ stat }: { stat: Stat }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const obj = { value: 0 };
+
+    const ctx = gsap.context(() => {
+      gsap.to(obj, {
+        value: stat.end,
+        duration: stat.end >= 1000 ? 2.6 : 2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 88%",
+          once: true,
+        },
+        onUpdate: () => {
+          el.textContent = `${stat.prefix}${formatNumber(obj.value, stat.decimals)}${stat.suffix}`;
+        },
+      });
+    }, el);
+
+    return () => ctx.revert();
+  }, [stat]);
+
+  return (
+    <div
+      ref={ref}
+      className="social-proof__stat font-display font-bold text-navy tabular-nums tracking-tight"
+    >
+      {stat.prefix}0{stat.suffix}
+    </div>
+  );
+}
+
 export default function SocialProof() {
   const ref = useRef<HTMLElement>(null);
 
@@ -59,31 +97,6 @@ export default function SocialProof() {
         stagger: 0.1,
         ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 80%", once: true },
-      });
-
-      const counterEls = el.querySelectorAll<HTMLElement>("[data-counter]");
-      counterEls.forEach((counterEl) => {
-        const end = parseFloat(counterEl.dataset.counterEnd || "0");
-        const decimals = parseInt(counterEl.dataset.counterDecimals || "0", 10);
-        const prefix = counterEl.dataset.counterPrefix || "";
-        const suffix = counterEl.dataset.counterSuffix || "";
-        const obj = { value: 0 };
-
-        ScrollTrigger.create({
-          trigger: counterEl,
-          start: "top 85%",
-          once: true,
-          onEnter: () => {
-            gsap.to(obj, {
-              value: end,
-              duration: 2,
-              ease: "power2.out",
-              onUpdate: () => {
-                counterEl.textContent = `${prefix}${formatNumber(obj.value, decimals)}${suffix}`;
-              },
-            });
-          },
-        });
       });
     }, el);
 
@@ -109,23 +122,14 @@ export default function SocialProof() {
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 animate-in">
+            <div className="social-proof__stats grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 animate-in">
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="bg-light-bg rounded-2xl p-6 text-center border border-gray-100"
+                  className="social-proof__stat-card bg-light-bg rounded-2xl p-6 sm:p-7 text-center border border-gray-100"
                 >
-                  <p
-                    data-counter
-                    data-counter-end={stat.end}
-                    data-counter-decimals={stat.decimals}
-                    data-counter-prefix={stat.prefix}
-                    data-counter-suffix={stat.suffix}
-                    className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-navy leading-none mb-3"
-                  >
-                    {stat.prefix}0{stat.suffix}
-                  </p>
-                  <p className="text-text-muted text-sm leading-snug">
+                  <StatCounter stat={stat} />
+                  <p className="social-proof__stat-label text-text-muted leading-snug">
                     {stat.label}
                   </p>
                 </div>
