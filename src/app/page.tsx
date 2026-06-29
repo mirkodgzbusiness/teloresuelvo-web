@@ -1,3 +1,4 @@
+import LoadingScreen from "@/components/LoadingScreen";
 import NavMultilevel from "@/components/NavMultilevel";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -13,6 +14,7 @@ import FAQ from "@/components/FAQ";
 export default function Home() {
   return (
     <>
+      <LoadingScreen />
       <NavMultilevel transparent />
       <div data-main="" className="relative z-[2] bg-page">
         <main>

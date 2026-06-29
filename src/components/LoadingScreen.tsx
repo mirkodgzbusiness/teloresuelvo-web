@@ -10,11 +10,11 @@ export default function LoadingScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setFadeOut(true);
-    }, 2000);
+    }, 1500);
 
     const removeTimer = setTimeout(() => {
       setVisible(false);
-    }, 2600);
+    }, 2100);
 
     return () => {
       clearTimeout(timer);

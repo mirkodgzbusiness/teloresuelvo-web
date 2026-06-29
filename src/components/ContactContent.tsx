@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import OpeningHours from "@/components/OpeningHours";
+import Button043 from "@/components/Button043";
 
 const WHATSAPP_CTA_HREF =
   "https://wa.me/393514915445?text=Hola%20Te%20Lo%20Resuelvo%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20cotizar%20un%20vuelo.%20%C2%BFMe%20podr%C3%ADan%20dar%20precios%20y%20disponibilidad%3F";
@@ -182,26 +183,14 @@ export default function ContactContent() {
                   </div>
                 </div>
               </div>
-              <a
+              <Button043
                 href="https://maps.app.goo.gl/tvtxrxareqma2F4s5"
+                label="Ver en Google Maps"
+                long
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-office__maps-link"
-              >
-                Ver en Google Maps
-                <svg
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className="w-4 h-4"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M9.334 12.667L14 8l-4.666-4.667"
-                    strokeMiterlimit="10"
-                  />
-                  <path d="M14 8H1.334" strokeMiterlimit="10" />
-                </svg>
-              </a>
+                className="mt-2"
+              />
             </div>
             <div className="contact-office__map">
               <iframe
