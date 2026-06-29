@@ -12,7 +12,7 @@ const steps = [
     eyebrow: "Garantía",
     titleNode: <><span className="text-gradient">Emisión Real</span> y Verificable</>,
     text: "Cada boleto que emitimos tiene un código PNR verificable directamente en la web de la aerolínea. No hay intermediarios ocultos ni agencias fantasma. Tu dinero está seguro.",
-    image: "/step-1.avif",
+    image: "/step-garantia.webp",
   },
   {
     eyebrow: "Experiencia",

@@ -95,27 +95,102 @@ h6 {
   color: #fff;
 }
 
-/* ── Social proof stats ── */
+/* ── Odometer Stats Bar ── */
 
-.social-proof__stat {
-  font-size: clamp(3.75rem, 14vw, 5.5rem);
-  line-height: 1;
-  margin: 0 0 0.75rem;
+.odometer-stats {
+  background-color: var(--color-navy);
+  border-radius: 1.25em;
+  display: flex;
+  align-items: stretch;
+  padding: 2em 0;
 }
 
-.social-proof__stat-label {
-  font-size: 0.9375rem;
+.odometer-stats__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+  padding: 0 2em;
+}
+
+.odometer-stats__label {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
   margin: 0;
 }
 
-@media (min-width: 640px) {
-  .social-proof__stat {
-    font-size: clamp(3rem, 5vw, 4.5rem);
+.odometer-stats__number {
+  font-family: var(--font-heading), Arial, sans-serif;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.odometer-stats__desc {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.odometer-stats__divider {
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  align-self: stretch;
+}
+
+@media screen and (max-width: 767px) {
+  .odometer-stats {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
   }
 
-  .social-proof__stat-label {
-    font-size: 1rem;
+  .odometer-stats__item {
+    padding: 1.5em 1.75em;
   }
+
+  .odometer-stats__divider {
+    width: auto;
+    height: 1px;
+    align-self: stretch;
+  }
+}
+
+/* ── Number Odometer ── */
+
+[data-odometer-element] {
+  display: inline-flex;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-odometer-part="mask"],
+[data-odometer-part="static"] {
+  display: inline-block;
+  overflow: clip;
+  padding: 0.05em;
+  margin: -0.05em;
+}
+
+[data-odometer-part="roller"] {
+  display: block;
+  white-space: pre;
+  text-align: center;
+  will-change: transform;
+}
+
+[data-odometer-part="static"] {
+  display: inline-block;
 }
 
 .text-gradient {
@@ -1749,7 +1824,7 @@ a.nav-link:focus-visible .nav-link__label::after {
 
 .review-card {
   background: #fff;
-  border: 1px solid var(--color-gray-border);
+  border: 1px solid #4497d387;
   border-radius: 1em;
   padding: 1.75em;
   display: flex;

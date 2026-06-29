@@ -1,85 +1,232 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Stat {
-  end: number;
-  prefix: string;
-  suffix: string;
-  decimals: number;
-  label: string;
-}
+function initNumberOdometer() {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const initFlag = "data-odometer-initialized";
 
-const stats: Stat[] = [
-  {
-    end: 20,
-    prefix: "+",
-    suffix: "",
-    decimals: 0,
-    label: "Años de experiencia en billetería aérea",
-  },
-  {
-    end: 7000,
-    prefix: "+",
-    suffix: "",
-    decimals: 0,
-    label: "Personas viajaron con nosotros",
-  },
-  {
-    end: 4.9,
-    prefix: "",
-    suffix: "/5",
-    decimals: 1,
-    label: "Valoración de nuestros clientes",
-  },
-];
+  const defaults = {
+    duration: 1,
+    ease: "power3.out",
+    elementStagger: 0.1,
+    digitStagger: 0.04,
+    revealDuration: 0.5,
+    revealEase: "power2.out",
+    triggerStart: "top 80%",
+    staggerOrder: "left",
+    digitCycles: 2,
+  };
 
-function formatNumber(value: number, decimals: number): string {
-  if (decimals > 0) return value.toFixed(decimals);
-  return Math.round(value).toLocaleString("es-ES");
-}
+  function getLineHeightRatio(el: Element) {
+    const cs = getComputedStyle(el);
+    const lh = cs.lineHeight;
+    if (lh === "normal") return 1.2;
+    return parseFloat(lh) / parseFloat(cs.fontSize);
+  }
 
-function StatCounter({ stat }: { stat: Stat }) {
-  const ref = useRef<HTMLDivElement>(null);
+  interface Segment {
+    type: "digit" | "static";
+    char: string;
+    startDigit?: number;
+    hidden?: boolean;
+  }
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+  function parseSegments(text: string): Segment[] {
+    return [...text].map((char) => ({
+      type: /\d/.test(char) ? "digit" : "static",
+      char,
+    }));
+  }
 
-    const obj = { value: 0 };
+  function mapStartDigits(segments: Segment[], startValue: number): Segment[] {
+    const digitSlots = segments.filter((s) => s.type === "digit");
+    const padded = String(Math.floor(Math.abs(startValue)))
+      .padStart(digitSlots.length, "0")
+      .slice(-digitSlots.length);
+    let di = 0;
+    return segments.map((s) =>
+      s.type === "digit" ? { ...s, startDigit: parseInt(padded[di++], 10) } : s
+    );
+  }
 
-    const ctx = gsap.context(() => {
-      gsap.to(obj, {
-        value: stat.end,
-        duration: stat.end >= 1000 ? 2.6 : 2,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 88%",
-          once: true,
-        },
-        onUpdate: () => {
-          el.textContent = `${stat.prefix}${formatNumber(obj.value, stat.decimals)}${stat.suffix}`;
-        },
+  function markHiddenSegments(segments: Segment[], startValue: number): Segment[] {
+    const totalDigits = segments.filter((s) => s.type === "digit").length;
+    const absStart = Math.floor(Math.abs(startValue));
+    const startDigitCount = absStart === 0 ? 1 : String(absStart).length;
+    const leadingZeros = Math.max(0, totalDigits - startDigitCount);
+    if (leadingZeros === 0) return segments;
+    let digitsSeen = 0;
+    let firstDigitSeen = false;
+    let prevDigitHidden = false;
+    return segments.map((seg) => {
+      if (seg.type === "digit") {
+        firstDigitSeen = true;
+        const hidden = digitsSeen < leadingZeros;
+        prevDigitHidden = hidden;
+        digitsSeen++;
+        return { ...seg, hidden };
+      }
+      const hidden = firstDigitSeen && prevDigitHidden;
+      return { ...seg, hidden };
+    });
+  }
+
+  function shouldGrow(el: Element, hasExplicitStart: boolean, startValue: number, segments: Segment[]) {
+    if (el.hasAttribute("data-odometer-grow")) {
+      return el.getAttribute("data-odometer-grow") !== "false";
+    }
+    if (!hasExplicitStart) return false;
+    const absStart = Math.floor(Math.abs(startValue));
+    const startDigitCount = absStart === 0 ? 1 : String(absStart).length;
+    const endDigitCount = segments.filter((s) => s.type === "digit").length;
+    return startDigitCount < endDigitCount;
+  }
+
+  function buildRollerDOM(el: Element, segments: Segment[], step: number, grow: boolean) {
+    (el as HTMLElement).innerHTML = "";
+    (el as HTMLElement).style.height = "";
+    const rollers: { roller: HTMLElement; targetPos: number }[] = [];
+    const revealEls: HTMLElement[] = [];
+    const totalCells = 10 * defaults.digitCycles;
+    segments.forEach((seg) => {
+      if (seg.type === "static") {
+        const span = document.createElement("span");
+        span.setAttribute("data-odometer-part", "static");
+        span.style.height = step + "em";
+        span.style.lineHeight = String(step);
+        span.textContent = seg.char;
+        el.appendChild(span);
+        if (grow && seg.hidden) {
+          gsap.set(span, { opacity: 0 });
+          revealEls.push(span);
+        }
+        return;
+      }
+      const mask = document.createElement("span");
+      mask.setAttribute("data-odometer-part", "mask");
+      mask.style.height = step + "em";
+      mask.style.lineHeight = String(step);
+      const roller = document.createElement("span");
+      roller.setAttribute("data-odometer-part", "roller");
+      roller.style.lineHeight = String(step);
+      const digits: number[] = [];
+      for (let d = 0; d < totalCells; d++) digits.push(d % 10);
+      roller.textContent = digits.join("\n");
+      mask.appendChild(roller);
+      el.appendChild(mask);
+      const startDigit = seg.startDigit || 0;
+      const isReveal = grow && seg.hidden;
+      gsap.set(roller, { y: isReveal ? step + "em" : -startDigit * step + "em" });
+      const endDigit = parseInt(seg.char, 10);
+      const targetPos = endDigit > startDigit ? endDigit : 10 + endDigit;
+      rollers.push({ roller, targetPos });
+      if (isReveal) revealEls.push(mask);
+    });
+    return { rollers, revealEls };
+  }
+
+  function cleanupElement(el: Element, originalText: string) {
+    (el as HTMLElement).style.overflow = "";
+    (el as HTMLElement).style.height = "";
+    const digits = [...originalText].filter((c) => /\d/.test(c));
+    let di = 0;
+    el.querySelectorAll('[data-odometer-part="mask"]').forEach((mask) => {
+      const roller = mask.querySelector('[data-odometer-part="roller"]');
+      if (roller) roller.remove();
+      mask.textContent = digits[di++] || "";
+      (mask as HTMLElement).style.opacity = "";
+      (mask as HTMLElement).style.overflow = "";
+    });
+    el.querySelectorAll('[data-odometer-part="static"]').forEach((stat) => {
+      (stat as HTMLElement).style.opacity = "";
+    });
+  }
+
+  function applyStaggerOrder<T>(items: T[], order: string): T[] {
+    const arr = [...items];
+    if (order === "right") return arr.reverse();
+    return arr;
+  }
+
+  document.querySelectorAll("[data-odometer-group]").forEach((group) => {
+    if (group.hasAttribute(initFlag)) return;
+    group.setAttribute(initFlag, "");
+
+    const elements = Array.from(group.querySelectorAll("[data-odometer-element]"));
+    if (!elements.length || prefersReducedMotion) return;
+
+    const staggerOrder = group.getAttribute("data-odometer-stagger-order") || defaults.staggerOrder;
+    const triggerStart = group.getAttribute("data-odometer-trigger-start") || defaults.triggerStart;
+    const elementStagger = parseFloat(group.getAttribute("data-odometer-stagger") || "") || defaults.elementStagger;
+
+    const elementData = elements.map((el) => {
+      const originalText = (el as HTMLElement).textContent?.trim() || "";
+      const hasExplicitStart = el.hasAttribute("data-odometer-start");
+      const startValue = parseFloat(el.getAttribute("data-odometer-start") || "") || 0;
+      const duration = parseFloat(el.getAttribute("data-odometer-duration") || "") || defaults.duration;
+      const step = getLineHeightRatio(el);
+
+      let segments = parseSegments(originalText);
+      segments = mapStartDigits(segments, startValue);
+      segments = markHiddenSegments(segments, startValue);
+
+      const grow = shouldGrow(el, hasExplicitStart, startValue, segments);
+      const { rollers, revealEls } = buildRollerDOM(el, segments, step, grow);
+
+      const fontSize = parseFloat(getComputedStyle(el).fontSize);
+      const revealData = revealEls.map((revealEl) => {
+        const widthEm = revealEl.offsetWidth / fontSize;
+        gsap.set(revealEl, { width: 0, overflow: "hidden" });
+        return { el: revealEl, widthEm };
       });
-    }, el);
 
-    return () => ctx.revert();
-  }, [stat]);
+      return { el, rollers, duration, step, revealData, originalText };
+    });
 
-  return (
-    <div
-      ref={ref}
-      className="social-proof__stat font-display font-bold text-navy tabular-nums tracking-tight"
-    >
-      {stat.prefix}0{stat.suffix}
-    </div>
-  );
+    const ordered = applyStaggerOrder(elementData, staggerOrder);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: group,
+        start: triggerStart,
+        once: true,
+      },
+      onComplete() {
+        elementData.forEach(({ el, originalText }) => {
+          cleanupElement(el, originalText);
+        });
+      },
+    });
+
+    ordered.forEach((data, orderIdx) => {
+      const { rollers, duration, revealData } = data;
+      const offset = orderIdx * elementStagger;
+
+      revealData.forEach(({ el: revEl, widthEm }) => {
+        tl.to(revEl, {
+          width: widthEm + "em",
+          opacity: 1,
+          duration: defaults.revealDuration,
+          ease: defaults.revealEase,
+        }, offset);
+      });
+
+      rollers.forEach(({ roller, targetPos }, digitIdx) => {
+        const reversedIdx = rollers.length - 1 - digitIdx;
+        tl.to(roller, {
+          y: -targetPos * data.step + "em",
+          duration,
+          ease: defaults.ease,
+          force3D: true,
+        }, offset + reversedIdx * defaults.digitStagger);
+      });
+    });
+  });
 }
 
 export default function SocialProof() {
@@ -99,6 +246,8 @@ export default function SocialProof() {
         scrollTrigger: { trigger: el, start: "top 80%", once: true },
       });
     }, el);
+
+    initNumberOdometer();
 
     return () => ctx.revert();
   }, []);
@@ -122,54 +271,66 @@ export default function SocialProof() {
               </p>
             </div>
 
-            <div className="social-proof__stats grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 animate-in">
-              {stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="social-proof__stat-card bg-light-bg rounded-2xl p-6 sm:p-7 text-center border border-gray-100"
+            {/* Odometer stats bar */}
+            <div
+              data-odometer-group
+              data-odometer-trigger-start="top 85%"
+              className="odometer-stats animate-in"
+            >
+              <div className="odometer-stats__item">
+                <p className="odometer-stats__label">Años de experiencia</p>
+                <p
+                  data-odometer-element
+                  data-odometer-duration="2"
+                  className="odometer-stats__number"
                 >
-                  <StatCounter stat={stat} />
-                  <p className="social-proof__stat-label text-text-muted leading-snug">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
+                  +20
+                </p>
+                <p className="odometer-stats__desc">En billetería aérea</p>
+              </div>
+              <div className="odometer-stats__divider" />
+              <div className="odometer-stats__item">
+                <p className="odometer-stats__label">Clientes satisfechos</p>
+                <p
+                  data-odometer-element
+                  data-odometer-duration="2.5"
+                  data-odometer-start="0"
+                  className="odometer-stats__number"
+                >
+                  +7.000
+                </p>
+                <p className="odometer-stats__desc">Personas viajaron con nosotros</p>
+              </div>
+              <div className="odometer-stats__divider" />
+              <div className="odometer-stats__item">
+                <p className="odometer-stats__label">Valoración Google</p>
+                <p
+                  data-odometer-element
+                  data-odometer-duration="2"
+                  className="odometer-stats__number"
+                >
+                  4.9/5
+                </p>
+                <p className="odometer-stats__desc">De nuestros clientes</p>
+              </div>
             </div>
           </div>
 
-          {/* Right column */}
+          {/* Right column — Instagram */}
           <div className="animate-in">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-light-bg border border-gray-100">
-              <Image
-                src="/LogoTeLoResuelvoPNG (1).webp"
-                alt="Equipo Te Lo Resuelvo Viajes"
-                fill
-                className="object-contain p-16 opacity-15"
-                sizes="(max-width: 1024px) 100vw, 50vw"
+            <div className="rounded-2xl overflow-hidden border border-gray-100 bg-white" style={{ maxHeight: "660px" }}>
+              <iframe
+                src="https://www.instagram.com/p/DVqGsXTiBE5/embed/captioned/"
+                width="100%"
+                height="900"
+                frameBorder="0"
+                scrolling="no"
+                allowTransparency
+                allow="encrypted-media"
+                loading="lazy"
+                title="Te Lo Resuelvo Viajes — Instagram"
+                className="w-full"
               />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                <div className="w-16 h-16 rounded-full bg-navy/10 flex items-center justify-center mb-4">
-                  <svg
-                    className="w-7 h-7 text-navy/40"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <p className="text-navy/40 text-sm font-medium">
-                  Foto del equipo próximamente
-                </p>
-                <p className="text-navy/25 text-xs mt-1">
-                  Roberto: sube aquí una foto de tu equipo
-                </p>
-              </div>
             </div>
           </div>
         </div>
