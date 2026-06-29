@@ -6,10 +6,30 @@ const baseUrl =
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/_next/", "/private/"],
+      },
+      {
+        userAgent: [
+          "GPTBot",
+          "ChatGPT-User",
+          "Google-Extended",
+          "CCBot",
+          "anthropic-ai",
+          "Claude-Web",
+          "Bytespider",
+          "PetalBot",
+          "SemrushBot",
+          "AhrefsBot",
+          "DotBot",
+          "MJ12bot",
+        ],
+        disallow: "/",
+      },
+    ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

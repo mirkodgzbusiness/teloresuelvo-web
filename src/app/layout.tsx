@@ -27,20 +27,25 @@ const figtree = Figtree({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://teloresuelvo.it"),
-  title: "Te Lo Resuelvo Viajes | Vuelos baratos entre Sudamérica y Europa",
+  title: "Te Lo Resuelvo Viajes | Agenzia Viaggi a Milano — Vuelos Sudamérica y Europa",
   description:
-    "Vuelos al mejor precio entre Lima, Bogotá, Guayaquil, Buenos Aires y Europa. Equipaje incluido, asesoría personalizada y respuesta por WhatsApp en menos de 5 minutos. +500 pasajeros ya volaron con nosotros.",
+    "Agenzia di viaggio a Milano specializzata in voli tra Sud America ed Europa. Vuelos al mejor precio entre Lima, Bogotá, Guayaquil, Buenos Aires y Europa. Equipaje incluido, asesoría personalizada y respuesta por WhatsApp en menos de 5 minutos. Más de 25 años de experiencia.",
   keywords: [
-    "vuelos baratos",
-    "vuelos Sudamérica Europa",
+    "agenzia viaggi Milano",
+    "agenzia di viaggio a Milano",
+    "agencia de viajes Milán",
+    "Te Lo Resuelvo Viajes",
+    "vuelos baratos Sudamérica Europa",
+    "voli Sud America Europa",
     "vuelos Lima Milán",
     "vuelos Bogotá Madrid",
-    "vuelos Guayaquil",
-    "agencia de viajes",
+    "vuelos Guayaquil Europa",
+    "biglietteria aerea Milano",
     "billetería aérea",
-    "Te Lo Resuelvo",
     "vuelos con equipaje incluido",
     "vuelos latinos en Europa",
+    "voli economici Milano Lima",
+    "voli economici Milano Bogotà",
   ],
   icons: {
     icon: [
@@ -54,18 +59,18 @@ export const metadata: Metadata = {
     shortcut: "/favicon-512x512px.webp",
   },
   openGraph: {
-    title: "Te Lo Resuelvo Viajes | Vuelos baratos entre Sudamérica y Europa",
+    title: "Te Lo Resuelvo Viajes | Agenzia Viaggi a Milano — Voli Sud America Europa",
     description:
-      "Encontramos el vuelo perfecto para ti — al mejor precio, con equipaje incluido y sin sorpresas. Comparamos +20 aerolíneas y te respondemos por WhatsApp en minutos.",
+      "Agenzia di viaggio a Milano. Trovamos il volo perfetto per te — al miglior prezzo, con bagaglio incluso e senza sorprese. Confrontiamo +20 compagnie aeree e rispondiamo su WhatsApp in pochi minuti.",
     type: "website",
     locale: "es_ES",
     siteName: "Te Lo Resuelvo Viajes",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Te Lo Resuelvo Viajes | Vuelos baratos entre Sudamérica y Europa",
+    title: "Te Lo Resuelvo Viajes | Agenzia Viaggi a Milano — Voli Sud America Europa",
     description:
-      "Encontramos el vuelo perfecto para ti — al mejor precio, con equipaje incluido y sin sorpresas. Comparamos +20 aerolíneas y te respondemos por WhatsApp en minutos.",
+      "Agenzia di viaggio a Milano. Trovamos il volo perfetto per te — al miglior prezzo, con bagaglio incluso e senza sorprese. Confrontiamo +20 compagnie aeree e rispondiamo su WhatsApp in pochi minuti.",
   },
 };
 

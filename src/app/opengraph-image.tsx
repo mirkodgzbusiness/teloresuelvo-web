@@ -68,7 +68,7 @@ export default async function Image() {
               opacity: 0.8,
             }}
           >
-            Vuelos entre Sudamérica y Europa al mejor precio
+            Agenzia Viaggi a Milano — Voli tra Sud America ed Europa
           </span>
         </div>
       </div>
