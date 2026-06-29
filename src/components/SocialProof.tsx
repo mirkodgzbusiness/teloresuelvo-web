@@ -264,7 +264,7 @@ export default function SocialProof() {
                 clientes tranquilos
               </h2>
               <p className="text-text text-base leading-relaxed max-w-lg">
-                No somos una web automática. Llevamos más de 20 años en el mundo
+                No somos una web automática. Llevamos más de 25 años en el mundo
                 de la billetería aérea: buscamos, comparamos y negociamos el
                 mejor vuelo para ti. También formamos a quienes quieren aprender
                 este oficio con criterio real de agencia.
@@ -284,7 +284,7 @@ export default function SocialProof() {
                   data-odometer-duration="2"
                   className="odometer-stats__number"
                 >
-                  +20
+                  +25
                 </p>
                 <p className="odometer-stats__desc">En billetería aérea</p>
               </div>

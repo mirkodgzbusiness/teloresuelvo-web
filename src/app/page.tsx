@@ -23,7 +23,7 @@ export default function Home() {
           <ComoFunciona />
           <HighlightSection
             headline="Booking te da un precio. Nosotros te damos tranquilidad."
-            subtitle="Más de 20 años en biliettería aérea. Comparamos +20 aerolíneas, incluimos tu equipaje y te acompañamos hasta que aterrizas."
+            subtitle="Más de 25 años en biliettería aérea. Comparamos +20 aerolíneas, incluimos tu equipaje y te acompañamos hasta que aterrizas."
           />
           <Rutas />
           <Testimonios />

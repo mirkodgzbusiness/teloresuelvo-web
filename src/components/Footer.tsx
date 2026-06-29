@@ -59,7 +59,7 @@ export default function Footer() {
                 />
               </a>
               <p className="max-w-lg text-white !text-white leading-relaxed">
-                Más de 20 años en biliettería aérea. Tu agencia de confianza
+                Más de 25 años en biliettería aérea. Tu agencia de confianza
                 para volar entre América y Europa. Comparamos tarifas entre +20
                 aerolíneas, incluimos tu equipaje y te acompañamos hasta que
                 aterrizas.

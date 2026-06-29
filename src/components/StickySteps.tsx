@@ -16,27 +16,15 @@ const steps = [
   },
   {
     eyebrow: "Experiencia",
-    titleNode: <>Más de <span className="text-gradient">20 años</span> en biliettería</>,
+    titleNode: <>Más de <span className="text-gradient">25 años</span> en biliettería</>,
     text: "Conocemos el sector por dentro: tarifas, regulaciones y emisión real con aerolíneas. También impartimos formación en biliettería aérea para quienes quieren profesionalizarse con práctica de agencia.",
-    image: "/step-2.avif",
+    image: "/step-experiencia.jpg",
   },
   {
     eyebrow: "Asesoría",
     titleNode: <>Expertos en <span className="text-gradient">Regulaciones</span></>,
     text: "¿Necesitas carta de invitación? ¿Seguro de viaje obligatorio? ¿Requisitos de entrada? Te asesoramos con todo lo que necesitas para España, Italia, Perú y Colombia.",
-    image: "/step-3.avif",
-  },
-  {
-    eyebrow: "Soporte",
-    titleNode: <><span className="text-gradient">Humanos</span> 24/7</>,
-    text: "Si tu vuelo se retrasa, se cancela o cambia de puerta, nosotros te avisamos y resolvemos con la aerolínea por ti. No hablarás con un bot — hablarás con Roberto.",
-    image: "/step-4.avif",
-  },
-  {
-    eyebrow: "Precios",
-    titleNode: <>Competimos con <span className="text-gradient">cualquier web</span></>,
-    text: "Accedemos a tarifas consolidadas y ofertas de última hora que no aparecen en buscadores públicos. Si encuentras un precio mejor, lo igualamos.",
-    image: "/step-1.avif",
+    image: "/office-passport-experto-regulaciones.jpg",
   },
 ];
 

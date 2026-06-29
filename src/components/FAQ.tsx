@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     q: "¿Ofrecen formación en biliettería aérea?",
-    a: "Sí. Con más de 20 años de experiencia en el sector, también formamos a personas que quieren aprender biliettería aérea con criterio real de agencia. Escríbenos por WhatsApp si te interesa y te contamos cómo funciona.",
+    a: "Sí. Con más de 25 años de experiencia en el sector, también formamos a personas que quieren aprender biliettería aérea con criterio real de agencia. Escríbenos por WhatsApp si te interesa y te contamos cómo funciona.",
   },
   {
     q: "¿Por qué reservar con ustedes y no en una web?",
