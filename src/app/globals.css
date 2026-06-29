@@ -672,6 +672,53 @@ h6 {
   width: 0.875em;
 }
 
+.nav-mobile-social {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  .nav-mobile-social {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em 1.25em;
+    border-top: 1px solid var(--color-gray-border);
+    margin-top: auto;
+    list-style: none;
+  }
+
+  .nav-mobile-social__title {
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .nav-mobile-social__links {
+    display: flex;
+    gap: 1.5em;
+  }
+
+  .nav-mobile-social__link {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--color-navy);
+    text-decoration: none;
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .nav-mobile-social__icon {
+    width: 1.25em;
+    height: 1.25em;
+  }
+}
+
 .nav-dropdown {
   opacity: 0;
   pointer-events: none;
